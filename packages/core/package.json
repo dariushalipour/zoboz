@@ -1,7 +1,22 @@
 {
   "name": "@zoboz/core",
   "version": "0.0.0",
-  "private": false,
+  "description": "",
+  "homepage": "https://github.com/dariushalipour/zoboz#readme",
+  "bugs": {
+    "url": "https://github.com/dariushalipour/zoboz/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dariushalipour/zoboz.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "Dariush Alipour <drsh.alipour@gmail.com>",
+  "type": "module",
+  "main": "index.js",
   "scripts": {
     "dev": "echo 'Add dev script here'",
     "build": "echo 'Add build script here'",
