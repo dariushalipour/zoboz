@@ -1,6 +1,6 @@
-use crate::shared::{tsconfig_reader::TsConfig, value_objects::AbsoluteOutputDir};
+use crate::shared::value_objects::{AbsoluteOutputDir, AbsoluteSourceDir};
 
-use super::value_objects::AbsoluteSourceDir;
+use super::tsconfig_reader::TsConfig;
 
 pub(super) fn create_oxc_module_resolver(
     tsconfig: &TsConfig,

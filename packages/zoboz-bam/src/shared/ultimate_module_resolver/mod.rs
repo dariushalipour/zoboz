@@ -1,19 +1,21 @@
 use std::path::Path;
 
-use crate::shared::{
-    tsconfig_reader::TsConfig,
+use oxc_module_resolver::create_oxc_module_resolver;
+
+use super::{
+    tsconfig_reader::{self, TsConfig},
     value_objects::{AbsoluteOutputDir, AbsolutePackageDir, AbsoluteSourceDir},
 };
 
-use super::{oxc_module_resolver::create_oxc_module_resolver, tsconfig_reader};
+mod oxc_module_resolver;
 
-pub(super) struct UltimateModuleResolver {
+pub struct UltimateModuleResolver {
     resolver: oxc_resolver::Resolver,
     absolute_base_url: Option<String>,
 }
 
 impl UltimateModuleResolver {
-    pub(super) fn new(
+    pub fn new(
         package_dir: &AbsolutePackageDir,
         src_dir: &AbsoluteSourceDir,
         out_dir: &AbsoluteOutputDir,
@@ -27,7 +29,7 @@ impl UltimateModuleResolver {
         }
     }
 
-    pub(super) fn resolve(
+    pub fn resolve(
         &self,
         dependent_path: &Path,
         specifier: &str,

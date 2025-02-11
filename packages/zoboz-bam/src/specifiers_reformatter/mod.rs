@@ -4,16 +4,14 @@ use file_walker::walk_files_recursively;
 use specifiers_reformatter::SpecifiersReformatter;
 
 use crate::shared::{
-    tsconfig_reader,
-    value_objects::{self, AbsoluteOutputDir, AbsolutePackageDir, AbsoluteSourceDir, OutputFormat},
+    ultimate_module_resolver,
+    value_objects::{AbsoluteOutputDir, AbsolutePackageDir, AbsoluteSourceDir, OutputFormat},
 };
 
 mod cli_flags;
 mod file_updater;
 mod file_walker;
-mod oxc_module_resolver;
 mod specifiers_reformatter;
-mod ultimate_module_resolver;
 
 pub fn run_by_args(args: &[String]) -> Result<(), String> {
     let (output_format, absolute_package_dir, absolute_source_dir, absolute_output_dir) =

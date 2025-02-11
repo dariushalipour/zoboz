@@ -1,8 +1,8 @@
 use std::path::Path;
 
-use crate::shared::{utils, value_objects::AbsoluteOutputDir};
-
-use super::ultimate_module_resolver::UltimateModuleResolver;
+use crate::shared::{
+    ultimate_module_resolver::UltimateModuleResolver, utils, value_objects::AbsoluteOutputDir,
+};
 
 pub(super) struct SpecifiersReformatter {
     ultimate_module_resolver: UltimateModuleResolver,
