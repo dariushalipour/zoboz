@@ -1,4 +1,5 @@
 mod cli_flags;
+mod runtime_dependencies_assurer;
 mod type_field_remover;
 
 use std::{fs, string::String};
@@ -28,28 +29,40 @@ pub fn run_by_params(
 
     let mut change_sets: Vec<ChangeSet> = vec![];
 
-    type_field_remover::validate(&package_json, &mut change_sets);
+    type_field_remover::run(&package_json, &mut change_sets);
+    runtime_dependencies_assurer::run(&package_json, &mut change_sets);
 
     if change_sets.is_empty() {
         return Result::Ok(());
     }
 
-    if can_update_package_json {
-        package_json_content = apply_change_sets(&package_json_content, change_sets);
+    if !can_update_package_json {
+        return Result::Err(changesets_to_err_string(change_sets));
+    }
 
-        fs::write(
-            absolute_package_dir.value().join("package.json"),
-            package_json_content,
-        )
-        .expect("Failed to write package.json");
+    let (automatic_changesets, manual_changesets): (Vec<_>, Vec<_>) = change_sets
+        .into_iter()
+        .partition(|change_set| change_set.changes.len() > 0);
 
+    package_json_content = apply_change_sets(&package_json_content, automatic_changesets);
+
+    fs::write(
+        absolute_package_dir.value().join("package.json"),
+        package_json_content,
+    )
+    .expect("Failed to write package.json");
+
+    if manual_changesets.is_empty() {
         return Result::Ok(());
     }
 
-    let desciptions: Vec<String> = change_sets
+    return Result::Err(changesets_to_err_string(manual_changesets));
+}
+
+fn changesets_to_err_string(change_sets: Vec<ChangeSet>) -> String {
+    change_sets
         .iter()
         .map(|change_set| change_set.description.clone())
-        .collect();
-
-    return Result::Err(desciptions.join("\n"));
+        .collect::<Vec<String>>()
+        .join("\n")
 }

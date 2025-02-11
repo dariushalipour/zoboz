@@ -53,7 +53,7 @@ Feature: Ensure field "type" is not present
       """
     Then the result is error and equals the following text:
       """
-      Field `type` in package.json should not exist. https://github.com/dariushalipour/zoboz/blob/main/packages/zoboz-bam/src/package_json_verifier/README.md
+      Field `type` in package.json should not exist. https://github.com/dariushalipour/zoboz/blob/main/packages/zoboz-bam/src/package_json_verifier/type_field_remover/README.md
       """
 
   Scenario: When field "type" is present, in fix-mode, it will get removed from package.json

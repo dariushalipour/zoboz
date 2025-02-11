@@ -11,8 +11,9 @@ use crate::shared::{
 mod cli_flags;
 mod file_updater;
 mod file_walker;
-mod module_resolver;
+mod oxc_module_resolver;
 mod specifiers_reformatter;
+mod ultimate_module_resolver;
 
 pub fn run_by_args(args: &[String]) -> Result<(), String> {
     let (output_format, absolute_package_dir, absolute_source_dir, absolute_output_dir) =
@@ -52,8 +53,13 @@ pub fn run_by_params(
         panic!("Output directory must be inside the package directory");
     }
 
-    let specifiers_reformatter =
-        SpecifiersReformatter::new(&package_dir, &absolute_source_dir, &absolute_output_dir);
+    let resolver = ultimate_module_resolver::UltimateModuleResolver::new(
+        &package_dir,
+        &absolute_source_dir,
+        &absolute_output_dir,
+    );
+
+    let specifiers_reformatter = SpecifiersReformatter::new(resolver, &absolute_output_dir);
 
     walk_files_recursively(
         &absolute_output_dir.value(),

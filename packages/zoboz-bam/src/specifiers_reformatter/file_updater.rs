@@ -65,7 +65,7 @@ fn update_requires_and_imports<'a>(
             "{}{}{}{}",
             &caps[1],
             &caps[2],
-            specifiers_reformatter.format(&file_path, &caps[3], false),
+            specifiers_reformatter.format(&file_path, &caps[3]),
             &caps[4]
         )
     });
@@ -83,7 +83,7 @@ fn update_froms<'a>(
             "{}{}{}{}",
             &caps[1],
             &caps[2],
-            specifiers_reformatter.format(&file_path, &caps[3], false),
+            specifiers_reformatter.format(&file_path, &caps[3]),
             &caps[4]
         )
     });
