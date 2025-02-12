@@ -16,7 +16,9 @@ Feature: Ensures runtime dependencies will be available for the consumers
     And the package has a directory named "dist/cjs"
     And there is a file named "dist/cjs/index.js" with:
       """
-      const foo = require('package-not-available');
+      require('package-not-available/xyz/abc');
+      require('package-not-available/xyz');
+      require('package-not-available');
       """
     When the following command is executed:
       """
@@ -44,7 +46,9 @@ Feature: Ensures runtime dependencies will be available for the consumers
     And the package has a directory named "dist/cjs"
     And there is a file named "dist/cjs/index.js" with:
       """
-      const foo = require('package-not-available');
+      require('@package-not/available/xyz/abc');
+      require('@package-not/available/xyz');
+      require('@package-not/available');
       """
     When the following command is executed:
       """
@@ -52,7 +56,7 @@ Feature: Ensures runtime dependencies will be available for the consumers
       """
     Then the result is error and equals the following text:
       """
-      Runtime dependency `package-not-available` is not listed in package.json field `dependencies`. https://github.com/dariushalipour/zoboz/blob/main/packages/zoboz-bam/src/package_json_verifier/runtime_dependencies_assurer/README.md
+      Runtime dependency `@package-not/available` is not listed in package.json field `dependencies`. https://github.com/dariushalipour/zoboz/blob/main/packages/zoboz-bam/src/package_json_verifier/runtime_dependencies_assurer/README.md
       """
   # Scenario: If a runtime dependency is directly listed in dependencies,
   # in validate-mode, since it is already listed, no action is needed
