@@ -7,7 +7,7 @@ use crate::shared::json_editor::{Change, ChangeSet, ChangeType};
 use crate::shared::package_json_reader::PackageJson;
 use crate::shared::specifier_regex;
 use crate::shared::ultimate_module_resolver::UltimateModuleResolver;
-use crate::shared::value_objects::{AbsoluteOutputDir, AbsolutePackageDir, AbsoluteSourceDir};
+use crate::shared::value_objects::{AbsoluteOutputDir, AbsolutePackageDir};
 
 pub(crate) fn run(
     module_resolver: &UltimateModuleResolver,
