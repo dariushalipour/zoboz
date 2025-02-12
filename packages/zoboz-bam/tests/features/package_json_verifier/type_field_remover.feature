@@ -9,9 +9,15 @@ Feature: Ensure field "type" is not present
         "main": "dist/cjs/index.js"
       }
       """
+    And the package has a directory named "src"
+    And the package has a directory named "dist/cjs"
+    And there is a file named "dist/cjs/index.js" with:
+      """
+      exports.foo = 'bar';
+      """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir
+      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist
       """
     Then the result is ok
 
@@ -24,9 +30,15 @@ Feature: Ensure field "type" is not present
         "main": "dist/cjs/index.js"
       }
       """
+    And the package has a directory named "src"
+    And the package has a directory named "dist/cjs"
+    And there is a file named "dist/cjs/index.js" with:
+      """
+      exports.foo = 'bar';
+      """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --can-update-package-json
+      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist --can-update-package-json
       """
     Then the JSON content for "package.json" should be:
       """
@@ -47,9 +59,15 @@ Feature: Ensure field "type" is not present
         "main": "dist/cjs/index.js"
       }
       """
+    And the package has a directory named "src"
+    And the package has a directory named "dist/cjs"
+    And there is a file named "dist/cjs/index.js" with:
+      """
+      exports.foo = 'bar';
+      """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir
+      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist $scenario_dir
       """
     Then the result is error and equals the following text:
       """
@@ -63,24 +81,24 @@ Feature: Ensure field "type" is not present
         "name": "test",
         "version": "1.0.0",
         "type": "whatever",
-        "main": "dist/cjs/index.js",
-        "dependencies": {
-          "dep1": "1.0.0"
-        }
+        "main": "dist/cjs/index.js"
       }
+      """
+    And the package has a directory named "src"
+    And the package has a directory named "dist/cjs"
+    And there is a file named "dist/cjs/index.js" with:
+      """
+      exports.foo = 'bar';
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --can-update-package-json
+      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist --can-update-package-json
       """
     Then the JSON content for "package.json" should be:
       """
         {
           "name": "test",
           "version": "1.0.0",
-          "main": "dist/cjs/index.js",
-          "dependencies": {
-            "dep1": "1.0.0"
-          }
+          "main": "dist/cjs/index.js"
         }
       """

@@ -34,11 +34,11 @@ impl UltimateModuleResolver {
         dependent_path: &Path,
         specifier: &str,
         is_trying_base_url_already: bool,
-    ) -> Result<String, ()> {
+    ) -> Result<String, String> {
         let dependent_dirname: Option<&str> = dependent_path.parent().and_then(|p| p.to_str());
 
         if dependent_dirname.is_none() {
-            return Err(());
+            return Err("DIRNAME_NOT_FOUND".to_string());
         }
 
         let dependent_dirname = dependent_dirname.unwrap();
@@ -68,7 +68,7 @@ impl UltimateModuleResolver {
                 return self.resolve(dependent_path, specifier, true);
             }
 
-            return Err(());
+            return Err("RESOLVE_FAILED".to_string());
         }
 
         let resolved = resolved.unwrap();

@@ -26,15 +26,18 @@ pub fn run_by_args(args: &[String]) -> Result<(), String> {
 }
 
 pub fn run_by_params(
-    output_format: &str,
-    absolute_package_dir: &str,
-    absolute_source_dir: &str,
-    absolute_output_dir: &str,
+    output_format: &OutputFormat,
+    absolute_package_dir: &AbsolutePackageDir,
+    absolute_source_dir: &AbsoluteSourceDir,
+    absolute_output_dir: &AbsoluteOutputDir,
 ) -> Result<(), String> {
-    let output_format = OutputFormat::new(output_format)?;
-    let package_dir = AbsolutePackageDir::new(absolute_package_dir)?;
-    let absolute_source_dir = AbsoluteSourceDir::new(absolute_source_dir)?;
-    let absolute_output_dir = AbsoluteOutputDir::new(absolute_output_dir)?;
+    if !absolute_source_dir.is_package_dir_child(&absolute_package_dir) {
+        return Err("Source directory must be inside the package directory".to_string());
+    }
+
+    if !absolute_output_dir.is_package_dir_child(&absolute_package_dir) {
+        return Err("Output directory must be inside the package directory".to_string());
+    }
 
     let extensions: &[&str] = match output_format.value() {
         "esm" => &["js", "jsx", "mjs", "mjsx"],
@@ -43,16 +46,8 @@ pub fn run_by_params(
         _ => &["js", "jsx"],
     };
 
-    if !absolute_source_dir.is_package_dir_child(&package_dir) {
-        panic!("Source directory must be inside the package directory");
-    }
-
-    if !absolute_output_dir.is_package_dir_child(&package_dir) {
-        panic!("Output directory must be inside the package directory");
-    }
-
     let resolver = ultimate_module_resolver::UltimateModuleResolver::new(
-        &package_dir,
+        &absolute_package_dir,
         &absolute_source_dir,
         &absolute_output_dir,
     );

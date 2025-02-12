@@ -4,6 +4,10 @@ use super::value_objects::AbsolutePackageDir;
 pub struct PackageJson {
     #[serde(rename = "type")]
     pub type_field: Option<String>,
+    pub main: Option<String>,
+    pub module: Option<String>,
+    pub types: Option<String>,
+    pub exports: Option<serde_json::Value>,
 }
 
 pub fn get_package_json_string(package_dir: &AbsolutePackageDir) -> String {
