@@ -4,7 +4,7 @@ version = "1.2.0"
 edition = "2021"
 
 [dependencies]
-oxc_resolver = "4.0.0"
+oxc_resolver = "4.0.1"
 regex = "1"
 lazy_static = "1"
 serde = "1"

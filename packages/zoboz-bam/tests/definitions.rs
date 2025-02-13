@@ -25,12 +25,20 @@ fn main() {
 #[given(expr = "there is an npm package with:")]
 fn there_is_a_npm_package_with(world: &mut TheWorld, step: &Step) {
     initiate_tempdir(world);
-    write_file(world, "package.json", &get_docstring(step));
+    a_json_file_named_with(world, step, "package.json".to_string());
 }
 
 #[given(expr = "there is a file named {string} with:")]
 fn a_file_named_with(world: &mut TheWorld, step: &Step, file_name: String) {
     write_file(world, file_name.as_str(), &get_docstring(step));
+}
+
+#[given(expr = "there is a JSON file named {string} with:")]
+fn a_json_file_named_with(world: &mut TheWorld, step: &Step, file_name: String) {
+    let json_content = get_docstring(step);
+    // If you find a better way to validate only, switch to that
+    let _value: serde_json::Value = serde_json::from_str(&json_content).unwrap();
+    write_file(world, file_name.as_str(), &json_content);
 }
 
 #[then(expr = "the JS content for {string} should be:")]
