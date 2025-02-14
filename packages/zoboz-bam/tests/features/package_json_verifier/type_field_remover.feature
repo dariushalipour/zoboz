@@ -40,7 +40,8 @@ Feature: Ensure field "type" is not present
       """
       verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist --can-update-package-json
       """
-    Then the JSON content for "package.json" should be:
+    Then the result is ok
+    And the JSON content for "package.json" should be:
       """
         {
           "name": "test",
@@ -94,7 +95,8 @@ Feature: Ensure field "type" is not present
       """
       verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist --can-update-package-json
       """
-    Then the JSON content for "package.json" should be:
+    Then the result is ok
+    And the JSON content for "package.json" should be:
       """
         {
           "name": "test",

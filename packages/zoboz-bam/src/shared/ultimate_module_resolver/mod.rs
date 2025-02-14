@@ -29,6 +29,34 @@ impl UltimateModuleResolver {
         }
     }
 
+    pub fn resolve_package_json_path(
+        &self,
+        dependent_dir: &Path,
+        dependency_package_name: &str,
+    ) -> Result<String, String> {
+        let resolution = self
+            .resolver
+            .resolve(dependent_dir, &dependency_package_name);
+
+        match resolution {
+            Err(_) => return Err("RESOLVE_FAILED".to_string()),
+            Ok(resolution) => {
+                if resolution.package_json().is_none() {
+                    return Err("PACKAGE_JSON_NOT_FOUND".to_string());
+                }
+
+                let package_json_path = resolution
+                    .package_json()
+                    .unwrap()
+                    .realpath
+                    .to_string_lossy()
+                    .to_string();
+
+                Ok(package_json_path)
+            }
+        }
+    }
+
     pub fn resolve(
         &self,
         dependent_path: &Path,
