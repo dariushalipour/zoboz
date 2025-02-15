@@ -23,4 +23,3 @@ Package managers do not install `peerDependencies` by default. This can cause is
 ### When to Use `dependencies`
 
 - If `peerDependencies` is not suitable, use `dependencies` instead.
-

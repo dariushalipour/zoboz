@@ -3,7 +3,7 @@
 import { spawnSync } from "child_process";
 import fs from "fs";
 import path from "path";
-import { platform, env } from "process";
+import { platform } from "process";
 
 const packages = [
 	{
