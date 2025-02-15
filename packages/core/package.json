@@ -1,6 +1,6 @@
 {
 	"name": "@zoboz/core",
-	"version": "4.0.0",
+	"version": "4.1.0",
 	"description": "zoboz | d.ts + esm + cjs - hassle",
 	"homepage": "https://github.com/dariushalipour/zoboz#readme",
 	"bugs": {
@@ -44,8 +44,8 @@
 		"typescript": "5.7.3"
 	},
 	"dependencies": {
-		"esbuild": "0.24.2",
+		"esbuild": "0.25.0",
 		"oxc-resolver": "4.0.0",
-		"@zoboz/bam": "1.2.0"
+		"@zoboz/bam": "1.3.0"
 	}
 }
