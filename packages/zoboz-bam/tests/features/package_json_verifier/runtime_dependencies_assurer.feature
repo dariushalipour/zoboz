@@ -22,7 +22,7 @@ Feature: Ensures runtime dependencies will be available for the consumers
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist
+      verify-package-json --absolute-package-dir $scenario_dir
       """
     Then the result is error and equals the following text:
       """
@@ -52,7 +52,7 @@ Feature: Ensures runtime dependencies will be available for the consumers
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist --can-update-package-json
+      verify-package-json --absolute-package-dir $scenario_dir --can-update-package-json
       """
     Then the result is error and equals the following text:
       """
@@ -117,7 +117,7 @@ Feature: Ensures runtime dependencies will be available for the consumers
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist
+      verify-package-json --absolute-package-dir $scenario_dir
       """
     Then the result is ok
 
@@ -178,7 +178,7 @@ Feature: Ensures runtime dependencies will be available for the consumers
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist
+      verify-package-json --absolute-package-dir $scenario_dir
       """
     Then the result is error and equals the following text:
       """
@@ -242,7 +242,7 @@ Feature: Ensures runtime dependencies will be available for the consumers
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist --can-update-package-json
+      verify-package-json --absolute-package-dir $scenario_dir --can-update-package-json
       """
     Then the result is ok
     And the JSON content for "package.json" should be:
@@ -318,7 +318,7 @@ Feature: Ensures runtime dependencies will be available for the consumers
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist
+      verify-package-json --absolute-package-dir $scenario_dir
       """
     Then the result is error and equals the following text:
       """
@@ -385,7 +385,7 @@ Feature: Ensures runtime dependencies will be available for the consumers
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist --can-update-package-json
+      verify-package-json --absolute-package-dir $scenario_dir --can-update-package-json
       """
     Then the result is ok
     And the JSON content for "package.json" should be:

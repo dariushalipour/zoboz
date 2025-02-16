@@ -3,12 +3,12 @@ use std::collections::HashSet;
 use crate::shared::{
     json_editor::{Change, ChangeSet, ChangeType},
     package_json_reader::{get_package_json_by_file_path, PackageJson},
-    ultimate_module_resolver::UltimateModuleResolver,
+    simple_module_resolver::SimpleModuleResolver,
     value_objects::AbsolutePackageDir,
 };
 
 pub fn handle_resolved_absolute_specifiers(
-    module_resolver: &UltimateModuleResolver,
+    module_resolver: &SimpleModuleResolver,
     absolute_package_dir: &AbsolutePackageDir,
     package_json: &PackageJson,
     change_sets: &mut Vec<ChangeSet>,
@@ -65,7 +65,7 @@ fn handle_misplaced_dependency(
 }
 
 fn handle_unlisted_dependency(
-    module_resolver: &UltimateModuleResolver,
+    module_resolver: &SimpleModuleResolver,
     absolute_package_dir: &AbsolutePackageDir,
     specifier: String,
     change_sets: &mut Vec<ChangeSet>,

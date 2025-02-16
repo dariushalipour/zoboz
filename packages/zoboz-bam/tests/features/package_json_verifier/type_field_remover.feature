@@ -17,7 +17,7 @@ Feature: Ensure field "type" is not present
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist
+      verify-package-json --absolute-package-dir $scenario_dir
       """
     Then the result is ok
 
@@ -38,7 +38,7 @@ Feature: Ensure field "type" is not present
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist --can-update-package-json
+      verify-package-json --absolute-package-dir $scenario_dir --can-update-package-json
       """
     Then the result is ok
     And the JSON content for "package.json" should be:
@@ -68,7 +68,7 @@ Feature: Ensure field "type" is not present
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist $scenario_dir
+      verify-package-json --absolute-package-dir $scenario_dir $scenario_dir
       """
     Then the result is error and equals the following text:
       """
@@ -93,7 +93,7 @@ Feature: Ensure field "type" is not present
       """
     When the following command is executed:
       """
-      verify-package-json --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist --can-update-package-json
+      verify-package-json --absolute-package-dir $scenario_dir --can-update-package-json
       """
     Then the result is ok
     And the JSON content for "package.json" should be:

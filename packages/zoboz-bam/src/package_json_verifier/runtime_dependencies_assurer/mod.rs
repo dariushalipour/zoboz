@@ -7,17 +7,16 @@ use unresolved_absolute_specifiers_handler::handle_unresolved_absolute_specifier
 use crate::shared::json_editor::ChangeSet;
 
 use crate::shared::package_json_reader::{get_package_json_entry_points, PackageJson};
-use crate::shared::ultimate_module_resolver::UltimateModuleResolver;
-use crate::shared::value_objects::{AbsoluteOutputDir, AbsolutePackageDir};
+use crate::shared::simple_module_resolver::SimpleModuleResolver;
+use crate::shared::value_objects::AbsolutePackageDir;
 
 mod module_specifiers_dumper;
 mod resolved_absolute_specifiers_handler;
 mod unresolved_absolute_specifiers_handler;
 
 pub(crate) fn run(
-    module_resolver: &UltimateModuleResolver,
+    module_resolver: &SimpleModuleResolver,
     absolute_package_dir: &AbsolutePackageDir,
-    absolute_output_dir: &AbsoluteOutputDir,
     package_json: &PackageJson,
     change_sets: &mut Vec<ChangeSet>,
 ) {
@@ -25,18 +24,13 @@ pub(crate) fn run(
 
     let mut resolved_absolute_specifiers: HashSet<String> = HashSet::new();
     let mut unresolved_absolute_specifiers: HashSet<String> = HashSet::new();
-    let mut resolved_relative_specifiers: HashSet<String> = HashSet::new();
-    let mut unresolved_relative_specifiers: HashSet<String> = HashSet::new();
 
     for entry_point in entry_points {
         dump_modules_specifiers(
             module_resolver,
-            absolute_output_dir,
             absolute_package_dir.value().join(entry_point).as_path(),
             &mut resolved_absolute_specifiers,
             &mut unresolved_absolute_specifiers,
-            &mut resolved_relative_specifiers,
-            &mut unresolved_relative_specifiers,
         );
     }
 
