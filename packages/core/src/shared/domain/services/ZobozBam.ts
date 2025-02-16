@@ -101,8 +101,12 @@ export class ZobozBam {
 
 			const onErrData = (chunk) => {
 				errData += chunk.toString();
+			};
+
+			const onOutData = (chunk) => {
+				outData += chunk.toString();
 				// based on zoboz-bam, it means it's ready for the next command
-				if (errData.endsWith("zoboz $ ")) {
+				if (outData.endsWith("zoboz $ ")) {
 					zobozBamProcess.stderr.removeListener("data", onErrData);
 					zobozBamProcess.stdout.removeListener("data", onOutData);
 
@@ -112,10 +116,6 @@ export class ZobozBam {
 						resolve(outData);
 					}
 				}
-			};
-
-			const onOutData = (chunk) => {
-				outData += chunk.toString();
 			};
 
 			zobozBamProcess.stderr.addListener("data", onErrData);
