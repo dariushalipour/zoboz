@@ -7,7 +7,7 @@ npm -w @zoboz/bam run build-binaries
 ./verdaccio/run.sh --start >/dev/null
 PUBLISH_REGISTRY=http://localhost:4873 npm -w @zoboz/bam run publish-binaries
 npm -w @zoboz/bam publish --registry http://localhost:4873
-npm install
+npm install --registry http://localhost:4873
 npm -w @zoboz/core run build
 ./verdaccio/run.sh --stop >/dev/null
 

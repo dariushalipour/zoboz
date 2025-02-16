@@ -13,15 +13,15 @@ export type PackageJsonVerifierConfig = {
 	canUpdatePackageJson: boolean;
 };
 
-type ZobozBamProcess = ChildProcessByStdio<Writable, Readable, null>;
+type ZobozBamProcess = ChildProcessByStdio<Writable, Readable, Readable>;
 
 export class ZobozBam {
-	private zobozBamProcessPromise: null | Promise<ZobozBamProcess>;
+	private readyProcess: null | Promise<ZobozBamProcess>;
 
 	constructor(private readonly absolutePackageDir: string) {}
 
-	reformatSpecifiers(config: SpecifiersReformatterConfig): Promise<void> {
-		return this.runCommand([
+	async reformatSpecifiers(config: SpecifiersReformatterConfig): Promise<void> {
+		await this.runCommand([
 			"reformat-specifiers",
 			"--absolute-package-dir",
 			this.absolutePackageDir,
@@ -35,7 +35,7 @@ export class ZobozBam {
 	}
 
 	async verifyPackageJson(config: PackageJsonVerifierConfig): Promise<void> {
-		return this.runCommand(
+		await this.runCommand(
 			[
 				"verify-package-json",
 				"--absolute-package-dir",
@@ -47,32 +47,32 @@ export class ZobozBam {
 
 	async exit(): Promise<void> {
 		await this.runCommand(["exit"]);
-		this.zobozBamProcessPromise = null;
+		this.readyProcess = null;
 	}
 
-	private async runCommand(args: string[]): Promise<void> {
-		const handleReady = (zobozBamProcess) => {
-			const readyPromise = this.getReadyPromise(zobozBamProcess);
+	private async runCommand(args: string[]): Promise<string> {
+		const commandResult = withResolvers<string>();
+
+		this.readyProcess = this.getReadyProcess().then((zobozBamProcess) => {
+			const response = this.waitResponse(zobozBamProcess);
 			zobozBamProcess.stdin.write(this.formatCommand(args));
 
-			return readyPromise.then(
-				() => zobozBamProcess,
-				() => zobozBamProcess,
-			);
-		};
+			return response
+				.then(commandResult.resolve)
+				.catch(commandResult.reject)
+				.then(() => zobozBamProcess);
+		});
 
-		this.zobozBamProcessPromise = this.getProcess().then(handleReady);
-
-		return this.zobozBamProcessPromise.then(() => {});
+		return commandResult.promise;
 	}
 
 	private formatCommand(args: string[]): string {
 		return `${args.join(" ").replace(/\\/g, "\\\\")}\n`;
 	}
 
-	private async getProcess(): Promise<ZobozBamProcess> {
-		if (this.zobozBamProcessPromise) {
-			return this.zobozBamProcessPromise;
+	private async getReadyProcess(): Promise<ZobozBamProcess> {
+		if (this.readyProcess) {
+			return this.readyProcess;
 		}
 
 		const requireFunc =
@@ -84,31 +84,59 @@ export class ZobozBam {
 		const zobozBamProcess = spawn(
 			execPath,
 			[requireFunc.resolve("@zoboz/bam")],
-			{
-				stdio: ["pipe", "pipe", "inherit"],
-			},
+			{ stdio: ["pipe", "pipe", "pipe"] },
 		);
 
-		this.zobozBamProcessPromise = this.getReadyPromise(zobozBamProcess).then(
+		this.readyProcess = this.waitResponse(zobozBamProcess).then(
 			() => zobozBamProcess,
 		);
 
-		return this.zobozBamProcessPromise;
+		return this.readyProcess;
 	}
 
-	private getReadyPromise(zobozBamProcess: ZobozBamProcess): Promise<void> {
-		return new Promise<void>((resolve, reject) => {
-			let response = "";
-			const onData = (chunk) => {
-				response += chunk.toString();
+	private waitResponse(zobozBamProcess: ZobozBamProcess): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			let errData = "";
+			let outData = "";
+
+			const onErrData = (chunk) => {
+				errData += chunk.toString();
 				// based on zoboz-bam, it means it's ready for the next command
-				if (response.endsWith("zoboz $ ")) {
-					zobozBamProcess.stdout.removeListener("data", onData);
-					resolve();
+				if (errData.endsWith("zoboz $ ")) {
+					zobozBamProcess.stderr.removeListener("data", onErrData);
+					zobozBamProcess.stdout.removeListener("data", onOutData);
+
+					if (errData !== "") {
+						reject(new Error(errData));
+					} else {
+						resolve(outData);
+					}
 				}
 			};
 
-			zobozBamProcess.stdout.addListener("data", onData);
+			const onOutData = (chunk) => {
+				outData += chunk.toString();
+			};
+
+			zobozBamProcess.stderr.addListener("data", onErrData);
+			zobozBamProcess.stdout.addListener("data", onOutData);
 		});
 	}
+}
+
+function withResolvers<T>(): {
+	promise: Promise<T>;
+	resolve: (data: T) => void;
+	reject: (error: Error) => void;
+} {
+	let resolve: (data: T) => void;
+	let reject: (error: Error) => void;
+
+	const promise = new Promise<T>((res, rej) => {
+		resolve = res;
+		reject = rej;
+	});
+
+	// @ts-ignore
+	return { promise, resolve, reject };
 }
