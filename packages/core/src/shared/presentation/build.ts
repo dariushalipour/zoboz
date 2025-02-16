@@ -58,7 +58,12 @@ export async function build(
 		process.exit(1);
 	}
 
-	new BuildsOrchestrator(zobozBam, orchestrators).build(
-		shouldUpdatePackageJson,
-	);
+	const buildsOrchestrator = new BuildsOrchestrator(zobozBam, orchestrators);
+
+	try {
+		await buildsOrchestrator.build(shouldUpdatePackageJson);
+	} catch (error) {
+		const errorMessage = error instanceof Error ? error.message : String(error);
+		logger.error("Build failed:", errorMessage);
+	}
 }

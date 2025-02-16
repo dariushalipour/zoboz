@@ -2,6 +2,7 @@ import { type ChildProcessByStdio, spawn } from "child_process";
 import { createRequire } from "module";
 import type { Readable, Writable } from "stream";
 import { execPath } from "process";
+import { DealBreakerError } from "../errors/DealBreakerError";
 
 export type SpecifiersReformatterConfig = {
 	absoluteSourceDir: string;
@@ -53,11 +54,11 @@ export class ZobozBam {
 	private async runCommand(args: string[]): Promise<string> {
 		const commandResult = withResolvers<string>();
 
-		this.readyProcess = this.getReadyProcess().then((zobozBamProcess) => {
+		this.getReadyProcess().then((zobozBamProcess) => {
 			const response = this.waitResponse(zobozBamProcess);
 			zobozBamProcess.stdin.write(this.formatCommand(args));
 
-			return response
+			this.readyProcess = response
 				.then(commandResult.resolve)
 				.catch(commandResult.reject)
 				.then(() => zobozBamProcess);
@@ -111,7 +112,7 @@ export class ZobozBam {
 					zobozBamProcess.stdout.removeListener("data", onOutData);
 
 					if (errData !== "") {
-						reject(new Error(errData));
+						reject(new DealBreakerError(errData));
 					} else {
 						resolve(outData);
 					}

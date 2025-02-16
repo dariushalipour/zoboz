@@ -1,3 +1,4 @@
+import { DealBreakerError } from "@shared/domain/errors/DealBreakerError.js";
 import type { ZobozBam } from "@shared/domain/services/ZobozBam.js";
 import * as process from "process";
 import { PackageJsonVerificationError } from "../domain/errors/PackageJsonVerificationError.js";
@@ -35,6 +36,8 @@ export class BuildsOrchestrator {
 			logger.success("zoboz build complete");
 		} catch (error) {
 			if (error instanceof PackageJsonVerificationError) {
+				logger.error(error.message);
+			} else if (error instanceof DealBreakerError) {
 				logger.error(error.message);
 			} else {
 				logger.error("Build failed", error);

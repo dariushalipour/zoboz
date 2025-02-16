@@ -64,7 +64,7 @@ program.registerCommand(
 	async (options) => {
 		const config = await new ZobozConfigFetcher().fetch();
 		logger.debug("Loaded config:", config);
-		build(config, options.updatePackageJson);
+		await build(config, options.updatePackageJson);
 	},
 );
 
