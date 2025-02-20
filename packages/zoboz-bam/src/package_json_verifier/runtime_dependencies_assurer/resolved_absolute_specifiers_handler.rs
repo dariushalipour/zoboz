@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use crate::shared::{
     json_editor::{Change, ChangeSet, ChangeType},
-    package_json_reader::{get_package_json_by_file_path, PackageJson},
+    package_json_reader::PackageJson,
     simple_module_resolver::SimpleModuleResolver,
     value_objects::AbsolutePackageDir,
 };
@@ -79,7 +79,7 @@ fn handle_unlisted_dependency(
         .resolve_package_json_path(directory, &specifier)
         .unwrap();
 
-    let package_json = get_package_json_by_file_path(&package_json_path);
+    let package_json = PackageJson::from_file_path(&package_json_path);
 
     match package_json.version {
         Some(version) => {

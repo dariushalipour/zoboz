@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use crate::shared::value_objects::{AbsoluteOutputDir, AbsoluteSourceDir};
 
 use super::tsconfig_reader::TsConfig;
@@ -7,10 +9,11 @@ pub(super) fn create_oxc_module_resolver(
     src_dir: &AbsoluteSourceDir,
     out_dir: &AbsoluteOutputDir,
 ) -> oxc_resolver::Resolver {
-    let aliases = get_aliases(tsconfig, src_dir, out_dir);
+    let tsconfig_aliases = get_tsconfig_aliases(tsconfig, src_dir, out_dir);
 
     let mut resolve_options = oxc_resolver::ResolveOptions::default();
-    resolve_options.alias = aliases;
+    resolve_options.imports_fields = vec![];
+    resolve_options.alias = tsconfig_aliases;
     resolve_options.extensions = vec![
         ".js".to_string(),
         ".jsx".to_string(),
@@ -50,7 +53,7 @@ pub(super) fn create_oxc_module_resolver(
     oxc_resolver::Resolver::new(resolve_options)
 }
 
-fn get_aliases(
+fn get_tsconfig_aliases(
     tsconfig: &TsConfig,
     src_dir: &AbsoluteSourceDir,
     out_dir: &AbsoluteOutputDir,
@@ -59,7 +62,7 @@ fn get_aliases(
         return vec![];
     }
 
-    let base_url = std::path::Path::new(&tsconfig.compiler_options.base_url);
+    let base_url = Path::new(&tsconfig.compiler_options.base_url);
 
     let aliases: Vec<(String, Vec<oxc_resolver::AliasValue>)> = tsconfig
         .compiler_options

@@ -6,7 +6,7 @@ use unresolved_absolute_specifiers_handler::handle_unresolved_absolute_specifier
 
 use crate::shared::json_editor::ChangeSet;
 
-use crate::shared::package_json_reader::{get_package_json_entry_points, PackageJson};
+use crate::shared::package_json_reader::PackageJson;
 use crate::shared::simple_module_resolver::SimpleModuleResolver;
 use crate::shared::value_objects::AbsolutePackageDir;
 
@@ -20,7 +20,7 @@ pub(crate) fn run(
     package_json: &PackageJson,
     change_sets: &mut Vec<ChangeSet>,
 ) {
-    let entry_points = get_package_json_entry_points(package_json);
+    let entry_points = package_json.get_entry_points();
 
     let mut resolved_absolute_specifiers: HashSet<String> = HashSet::new();
     let mut unresolved_absolute_specifiers: HashSet<String> = HashSet::new();

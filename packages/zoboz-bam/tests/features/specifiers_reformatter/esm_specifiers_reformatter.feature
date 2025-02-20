@@ -71,7 +71,11 @@ Feature: ES Module Specifier Formatter
       """
     When the following command is executed:
       """
-      reformat-specifiers --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist/esm --output-format esm
+      reformat-specifiers \
+        --absolute-package-dir $scenario_dir \
+        --absolute-source-dir $scenario_dir/src \
+        --absolute-output-dir $scenario_dir/dist/esm \
+        --output-format esm
       """
     Then the JS content for "dist/esm/index.js" should be:
       """

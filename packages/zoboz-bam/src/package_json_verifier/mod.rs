@@ -8,7 +8,7 @@ use cli_flags::get_params;
 
 use crate::shared::{
     json_editor::{apply_change_sets, ChangeSet},
-    package_json_reader::{get_package_json_object, get_package_json_string},
+    package_json_reader::{get_package_json_string, PackageJson},
     simple_module_resolver::SimpleModuleResolver,
     value_objects::AbsolutePackageDir,
 };
@@ -24,7 +24,7 @@ pub fn run_by_params(
     can_update_package_json: bool,
 ) -> Result<(), String> {
     let mut package_json_content = get_package_json_string(&absolute_package_dir);
-    let package_json = get_package_json_object(&package_json_content);
+    let package_json = PackageJson::from_json_string(&package_json_content);
 
     let mut change_sets: Vec<ChangeSet> = vec![];
 

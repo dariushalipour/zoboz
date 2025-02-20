@@ -78,7 +78,11 @@ Feature: Declaration Module Specifier Formatter
       """
     When the following command is executed:
       """
-      reformat-specifiers --absolute-package-dir $scenario_dir --absolute-source-dir $scenario_dir/src --absolute-output-dir $scenario_dir/dist/dts --output-format dts
+      reformat-specifiers \
+        --absolute-package-dir $scenario_dir \
+        --absolute-source-dir $scenario_dir/src \
+        --absolute-output-dir $scenario_dir/dist/dts \
+        --output-format dts
       """
     Then the DTS content for "dist/dts/index.d.ts" should be:
       """
